@@ -65,9 +65,11 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     public void agregarAtras(T elem) {
+                //TODO: Falta agregar los punteros de atras, de cada Nodo
         Nodo nuevo = new Nodo(elem);
         if (this.primero == null){
             this.primero = nuevo;
+            this.punteroInicial = nuevo;
             this.punteroFinal = nuevo;
         }else{
             Nodo actual = this.primero; //Metavariable para iterar en la lista
@@ -75,7 +77,8 @@ public class ListaEnlazada<T> implements Secuencia<T> {
                 actual = actual.siguiente;
             }
             actual.siguiente = nuevo;
-            this.punteroFinal = nuevo;
+            nuevo.anterior = actual; //asignamos a cada nodo puntero al anterior
+            this.punteroFinal = nuevo; 
         }
 
     }
@@ -114,7 +117,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
             }
             Nodo enlazado = actual.siguiente;
             previo.siguiente = enlazado; //'Eliminacion' de nodo
-            enlazado.anterior = previo; 
+            enlazado.anterior = previo; //El problema viene cuando eliminamos ultimo elemento, null apunta a previo
         }
     }
     public void modificarPosicion(int indice, T elem) {
