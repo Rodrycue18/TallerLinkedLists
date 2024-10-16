@@ -65,7 +65,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     public void agregarAtras(T elem) {
-                //TODO: Falta agregar los punteros de atras, de cada Nodo
+                //*TODO: Falta agregar los punteros de atras, de cada Nodo*
         Nodo nuevo = new Nodo(elem);
         if (this.primero == null){
             this.primero = nuevo;
@@ -92,7 +92,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         }
         return actual.valor;
     }
-
+    //Para metodo eliminar se podria rehacer desde otra perspectiva, usando punteros inicio y punteros FINAL PARA LA ELIMINACION DE LAS PUNTAS 
     public void eliminar(int i) {
         // if i == longitud - 1 ; Hacer cambios al punteroFinal, el punteroFinal apuntara
         //al penultimo nodo
@@ -113,24 +113,78 @@ public class ListaEnlazada<T> implements Secuencia<T> {
             Nodo ultimo = actual;
             Nodo chequeo = actual;
             if(chequeo.siguiente == null){
-                this.punteroFinal = ultimo.anterior; 
+                this.punteroFinal = ultimo.anterior;
+                Nodo enlazado = actual.siguiente;
+                previo.siguiente = enlazado; 
+                //caso especial porque cuando elimino ultimo nodo, el siguiente es null y null.anterior da error de NullpOINTER
             }
-            Nodo enlazado = actual.siguiente;
-            previo.siguiente = enlazado; //'Eliminacion' de nodo
-            enlazado.anterior = previo; //El problema viene cuando eliminamos ultimo elemento, null apunta a previo
+            else{
+                Nodo enlazado = actual.siguiente;
+                previo.siguiente = enlazado; //'Eliminacion' de nodo
+                enlazado.anterior = previo; //El problema viene cuando eliminamos ultimo elemento, null apunta a previo
+            }
+            
         }
     }
     public void modificarPosicion(int indice, T elem) {
-        throw new UnsupportedOperationException("No implementada aun");
+        if(indice==0){
+            Nodo first = this.punteroInicial;
+            first.valor = elem;
+        }
+        else{
+            if (indice == this.longitud()-1){ //CChequea lo que hice con this
+                Nodo last = this.punteroFinal;
+                last.valor = elem;
+            }
+            else{
+                Nodo actual = this.primero;
+                for(int j = 0; j<indice;j++){
+                    actual = actual.siguiente;
+                }
+                actual.valor = elem;
+            }
+        }
     }
 
     public ListaEnlazada(ListaEnlazada<T> lista) {
-        throw new UnsupportedOperationException("No implementada aun");
+        //A veces solo hay que codear pensando que esta bien y luego sorprenderse por el resultado
+        ListaEnlazada noAliasing = new ListaEnlazada<>();
+        //Preguntar si esta bien implementado
+        
+        // this.primero = lista.primero;
+        // this.punteroFinal = lista.punteroInicial;
+        // this.punteroInicial = lista.punteroFinal;
+        Nodo actual = lista.primero;
+        //this.primero = actual;
+        int contador = 0;
+        int longitud = lista.longitud();
+        while(contador<=longitud-1){//ESTA MAL THIS.PRIMERO ES IGUAL A NULL 
+            
+            noAliasing.agregarAtras(actual.valor);
+            actual = actual.siguiente;
+            contador++;
+        }
+        this.primero = noAliasing.primero;
+        this.punteroFinal = noAliasing.punteroFinal;
+        this.punteroInicial = noAliasing.punteroInicial;
+
     }
     
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("No implementada aun");
+        String str = new String();
+        str = "[" ;
+        int longitud = this.longitud();
+        //Itero hasta el penultimo elemento para luego a mano poner el ultimo sin coma
+        //[1,2,3] al termianr el loop [1, 2, ]
+        for (int i=0; i<=longitud-2;i++){
+            int valor = (int) this.obtener(i);
+            str = str + valor + ", ";
+            
+        }
+        str = str + this.obtener(longitud-1);
+
+        return str + "]";
     }
 
     private class ListaIterador implements Iterador<T> {
