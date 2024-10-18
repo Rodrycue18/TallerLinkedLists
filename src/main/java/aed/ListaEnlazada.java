@@ -178,7 +178,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         //Itero hasta el penultimo elemento para luego a mano poner el ultimo sin coma
         //[1,2,3] al termianr el loop [1, 2, ]
         for (int i=0; i<=longitud-2;i++){
-            int valor = (int) this.obtener(i);
+            T valor = (T) this.obtener(i);
             str = str + valor + ", ";
             
         }
@@ -189,17 +189,56 @@ public class ListaEnlazada<T> implements Secuencia<T> {
 
     private class ListaIterador implements Iterador<T> {
     	// Completar atributos privados
+        private int dedito;
+        private int tamano;
+        private Nodo recorrer;
+        public ListaIterador(){
+            this.dedito=0;
+            int contador = 0;
+            if (primero == null){
+                contador = 0;
+            }
+            else{
+                Nodo actual = primero;   
+                while(actual!=null){
+                    actual= actual.siguiente;
+                    contador++;
+                }
+            }
+            this.tamano = contador;  
+            this.recorrer = primero;
 
+        }
         public boolean haySiguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            // while (recorrer.siguiente!= null) {
+            //     recorrer = recorrer.siguiente;
+            // }
+            // return recorrer != null;
+            return dedito != tamano;
         }
         
         public boolean hayAnterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            if (dedito == 0){
+                return false;
+            }
+            else{
+                return dedito != tamano;
+            }
+
+	        
         }
 
         public T siguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        int i = dedito;
+            // int contador = 0;
+            int contador = dedito;
+            while (contador < i && recorrer!= null) {
+                recorrer = recorrer.siguiente;
+                contador++;
+            }
+            dedito++;
+            
+            return recorrer.valor;
         }
         
 
@@ -209,7 +248,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     public Iterador<T> iterador() {
-	    throw new UnsupportedOperationException("No implementada aun");
+        return new ListaIterador();
     }
-
+  
 }
