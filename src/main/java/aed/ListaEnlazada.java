@@ -148,7 +148,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
 
     public ListaEnlazada(ListaEnlazada<T> lista) {
         //A veces solo hay que codear pensando que esta bien y luego sorprenderse por el resultado
-        ListaEnlazada noAliasing = new ListaEnlazada<>();
+        ListaEnlazada<T> noAliasing = new ListaEnlazada<T>();
         //Preguntar si esta bien implementado
         
         // this.primero = lista.primero;
@@ -188,62 +188,43 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     private class ListaIterador implements Iterador<T> {
-    	// Completar atributos privados
+    	
         private int dedito;
-        private int tamano;
-        private Nodo recorrer;
+       
         public ListaIterador(){
             this.dedito=0;
-            int contador = 0;
-            if (primero == null){
-                contador = 0;
-            }
-            else{
-                Nodo actual = primero;   
-                while(actual!=null){
-                    actual= actual.siguiente;
-                    contador++;
-                }
-            }
-            this.tamano = contador;  
-            this.recorrer = primero;
-
+            
         }
         public boolean haySiguiente() {
-            // while (recorrer.siguiente!= null) {
-            //     recorrer = recorrer.siguiente;
-            // }
-            // return recorrer != null;
-            return dedito != tamano;
+            
+            return (dedito < longitud());
         }
         
         public boolean hayAnterior() {
-            if (dedito == 0){
-                return false;
-            }
-            else{
-                return dedito != tamano;
-            }
-
-	        
+            return dedito>0;
         }
 
         public T siguiente() {
-	        int i = dedito;
-            // int contador = 0;
-            int contador = dedito;
-            while (contador < i && recorrer!= null) {
-                recorrer = recorrer.siguiente;
-                contador++;
+            int i = dedito;
+
+            if(haySiguiente())
+            {
+                dedito++;
             }
-            dedito++;
             
-            return recorrer.valor;
-        }
+            return obtener(i);
+            
+            }
         
 
         public T anterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+
+            if(hayAnterior())
+            {
+                dedito--;
+            }
+            int i = dedito;
+            return obtener(i);
         }
     }
 
